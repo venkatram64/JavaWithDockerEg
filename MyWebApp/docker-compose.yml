@@ -1,0 +1,28 @@
+version: "3"
+services:
+  myappdb:
+    image: mysql
+    container_name: myappdb
+    command: --authentication_policy=mysql_native_password
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=myEmpDB
+    networks:
+      my-sdb-network:
+    ports:
+      - '33306:3306'
+  app:
+    build: .
+    container_name: app
+    ports:
+      - "8080:8080"
+    links:
+      - myappdb
+    depends_on:
+      - myappdb
+    networks:
+      my-sdb-network:
+networks:
+  my-sdb-network:
+    driver: bridge
